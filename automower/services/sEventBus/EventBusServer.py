@@ -1,7 +1,7 @@
 
 # https://gist.github.com/logasja/97bddeb84879b30519efb0c66b4db159 - thanks jacob
 import socket, select
-from automower.services.sEventBus.EventBusSocketBase import EventBusSocketBase, PORT, ADDRESS, RECEIVE_BUFFER_SIZE
+from automower.services.sEventBus.EventBusSocketBase import EventBusSocketBase, PORT, ADDRESS, RECEIVE_BUFFER_SIZE, LOBBY_MAX_SIZE
 
 
 class EventBusServer(EventBusSocketBase):
@@ -11,7 +11,7 @@ class EventBusServer(EventBusSocketBase):
     self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     self.server_socket.bind((ADDRESS, PORT))
-    self.server_socket.listen(10) # up to 10 clients can listen simutaneously
+    self.server_socket.listen(LOBBY_MAX_SIZE) # up to 10 clients can listen simutaneously
     self.add_connection(self.server_socket)    
     
   def _server_thread(self):
@@ -20,7 +20,7 @@ class EventBusServer(EventBusSocketBase):
       
       for sock in read_sockets:
         if sock == self.server_socket:
-          new_socket, addr = self.server_socket.accept()
+          new_socket, _ = self.server_socket.accept()
           self.add_connection(new_socket)
         else:
           try:

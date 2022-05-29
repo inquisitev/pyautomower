@@ -4,6 +4,7 @@ PORT = 5001 # TODO: read environemnt var
 ADDRESS = socket.gethostname() # TODO: read environemnt var
 RECEIVE_BUFFER_SIZE = 4096 # TODO: does this need to be so big? or can it be bigger
 MESSAGE_TERMINATOR = '\\-|-/' #trying to use something that wont be acceidetally used elsewhere
+LOBBY_MAX_SIZE = 10 #trying to use something that wont be acceidetally used elsewhere
 
 class EventBusSocketBase:
   
@@ -25,7 +26,10 @@ class EventBusSocketBase:
     return f"{message}{MESSAGE_TERMINATOR}".encode()
   
   def decode_message(self, message):
-    return message.decode().split(MESSAGE_TERMINATOR)
+    messages = message.decode().split(MESSAGE_TERMINATOR)
+    if '' in messages:
+      messages.remove('')
+    return messages
     
   def terminate(self):
     self.should_end = True
@@ -39,7 +43,8 @@ class EventBusSocketBase:
   def try_send(self, notifiers):
     while len(self.send_queue) > 0:
       if isinstance(notifiers, list):
+        msg = self.send_queue.pop()
         for notifier in notifiers:
-          notifier(self.send_queue.pop())
+          notifier(msg)
       else:
           notifiers(self.send_queue.pop())

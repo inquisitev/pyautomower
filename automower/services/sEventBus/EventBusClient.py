@@ -12,9 +12,8 @@ class EventBusClient(EventBusSocketBase):
 
   def _client_thread(self):
     while not self.should_end:
-      self.try_send(self.client_socket.send) # send message
-      data = self.client_socket.recv(RECEIVE_BUFFER_SIZE).decode()  # receive response
-      self.receive_callback(data)
-      
+      self.try_send(self.client_socket.send) 
+      data = self.client_socket.recv(RECEIVE_BUFFER_SIZE)  # receive response
+      self.receive(data)
       
     
