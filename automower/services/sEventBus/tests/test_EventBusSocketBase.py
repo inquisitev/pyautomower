@@ -48,7 +48,7 @@ def test_add_remove_connection():
   base.remove_connection(2)
   assert len(base.connection_list) == 1
   
-def test_terminae():
+def test_terminate():
   base = EventBusSocketBase(lambda x: print(x))
   assert base.should_end == False
   base.terminate()
