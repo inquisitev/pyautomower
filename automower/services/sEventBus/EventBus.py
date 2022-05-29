@@ -4,4 +4,6 @@ class EventBus:
     """
     Connect to TCP and read/send events. 
     """
-    pass
+    
+    def on_receive(event_data):
+        pass
