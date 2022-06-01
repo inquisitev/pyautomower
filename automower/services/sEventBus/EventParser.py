@@ -1,4 +1,0 @@
-
-
-class EventParser:
-    pass
