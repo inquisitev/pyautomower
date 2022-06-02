@@ -18,3 +18,5 @@ jobs:
     - name: Build coverage file
       run: |
         pytest --cache-clear --cov=automower automower 
+    - name: Comment coverage
+      uses: coroo/pytest-coverage-commentator@v1.0.2
