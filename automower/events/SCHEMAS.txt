@@ -1,33 +1,50 @@
-IDENTITY
+IDENTITY { non-standalone}
     processName: string
     key: string
 
-IDENTITY_CLAIM
+IDENTITY_CLAIM { onInitialize }
     processName: string
     key: string
 
-EMERGENCY_STOP
+EMERGENCY_STOP { onDemand }
     reason: string
     sender: IDENTITY
 
-TURN_COMMAND
+TURN_COMMAND { onDemand }
     sender: IDENTITY
-    heading: degree (float)
+    headingOffset: degree (float)
     velocity: degrees per second (float)
 
-DRIVE_COMMAND
+DRIVE_COMMAND { onDemand }
     sender: IDENTITY
     headingToMaintain: degree (float)
     velocity: meters per second (float)
     distance: meters
 
-IMU_HEADING_UPDATE
+MANUAL_DRIVE_COMMAND { onDemand }
+    sender: IDENTITY
+    leftPower: float (0 to 1) TODO: Verify with RoboClaw
+    rightPower: float (0 to 1) TODO: Verify with RoboClaw
+
+IMU_HEADING_UPDATE { RepRate: 50ms, timeout 120ms }
+    sender: IDENTITY
     yaw: degree
     pitch: degree
     roll: degree
 
-IMU_CRASH_EVENT
+IMU_CRASH_EVENT { onDemand }
+    sender: IDENTITY
     acceleration_X: meters per second per second
     acceleration_Y: meters per second per second
     acceleration_Z: meters per second per second
+
+MOTOR_STATE { RepRate 100ms timeout 220ms}
+    sender: IDENTITY
+    leftPower: float (0 to 1) TODO: Verify with RoboClaw
+    rightPower: float (0 to 1) TODO: Verify with RoboClaw
+
+WHEEL_ENCODER_VALUE { RepRate 50ms timeout 120ms}
+    sender: IDENTITY
+    leftEncoderValue: integer (zero at initialization, never reset)
+    rightEncoderValue: integer (zero at initialization, never reset)
 

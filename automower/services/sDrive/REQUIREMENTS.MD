@@ -1,12 +1,34 @@
-### Requirements
+## Requirements
 
+### Event Bus 
 - [ ] This service shall connect to sEventBus
-- [ ] This service shall use [RoboClaw](https://resources.basicmicro.com/using-the-roboclaw-python-library/) python library 
-- [ ] Upon disconnection from sEventBus, this service will send EMERGENCY_STOP event
-- [ ] Upon disconnection from sEventBus, this service will set motor power to 0 using roboclaw library. 
-- [ ] This service shall deny any motor value outside of the bounds defined in the roboclaw library.
-- [ ] This service shall allow input only from select services
-- [ ] If connection to sEventBus fails, this service shall retry in 10 seconds. If retry fails, this service shall exit. 
-- [ ] sEventBus communications shall run on a secondary thread. 
-- [ ] This service will subscribe to the DRIVE_COMMAND event
-- [ ] If EMERGENCY_STOP is received on sEventBus, this service shall set motor power to 0 using the roboclaw library. 
+- [ ] Upon disconnection from sEventBus, this service will invoke `EMERGENCY_STOP`
+### Incoming Events
+- [ ] This service shall listen to :
+        `EMERGENCY_STOP`,
+        `TURN_COMMAND`,
+        `DRIVE_COMMAND`,
+        `IMU_HEADING_UPDATE`,
+        `IMU_CRASH_EVENT` , and
+        `MANUAL_DRIVE_COMMAND`
+
+- [ ] `EMERGENCY_STOP` [ON RECEIVE] => stop all motors. recovery on power cycle. 
+- [ ] `TURN_COMMAND` [ON RECEIVE] => turn until `IMU_HEADING_UPDATE->yaw` is nearly equal to `IMU_HEADING_UPDATE->yaw` + `TURN_COMMAND->headingOffset` using shortest path. 
+- [ ] `DRIVE_COMMAND` [ON_RECEIVE] => drive until distance recorded by encoders is nearly equal to `DRIVE_COMMAND->distance`, while maintaining that `IMU_HEADING_UPDATE->yaw` is nearly equal to `DRIVE_COMMAND->headingToMaintain`
+- [ ] `IMU_HEADING_UPDATE` [ON_RECEIVE] => should be simply cached for usage in `TURN_COMMAND` AND `DRIVE_COMMAND`
+- [ ] `IMU_CRASH_EVENT` [ON_RECEIVE] => stop all motors. recovery on power cycle.
+- [ ] `MANUAL_DRIVE_COMMAND` [ON_RECEIVE] => Direct control over motor power, override `IMU_CRASH_EVENT`
+
+### Outgoing Events
+- [ ] This service shall broadcast:
+        `IDENTITY_CLAIM`,
+        `MOTOR_STATE`, and
+        `WHEEL_ENCODER_VALUE`
+
+- [ ] `IDENTITY_CLAIM` shall be broadcast on connection to `sEventBus`. `IDENTITY->processName` shall be `sDrive`. `IDENTITY->key` shall be a randomly generated string.
+
+### Sensor Inputs
+- [ ] Encoders shall be used to record and maintain velocity target
+
+### Actuator Outputs
+- [ ] Motor power shall be commanded using [RoboClaw](https://resources.basicmicro.com/using-the-roboclaw-python-library/) python library
