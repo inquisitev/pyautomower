@@ -1,0 +1,33 @@
+IDENTITY
+    processName: string
+    key: string
+
+IDENTITY_CLAIM
+    processName: string
+    key: string
+
+EMERGENCY_STOP
+    reason: string
+    sender: IDENTITY
+
+TURN_COMMAND
+    sender: IDENTITY
+    heading: degree (float)
+    velocity: degrees per second (float)
+
+DRIVE_COMMAND
+    sender: IDENTITY
+    headingToMaintain: degree (float)
+    velocity: meters per second (float)
+    distance: meters
+
+IMU_HEADING_UPDATE
+    yaw: degree
+    pitch: degree
+    roll: degree
+
+IMU_CRASH_EVENT
+    acceleration_X: meters per second per second
+    acceleration_Y: meters per second per second
+    acceleration_Z: meters per second per second
+
