@@ -45,6 +45,12 @@ MOTOR_STATE { RepRate 100ms timeout 220ms}
 
 WHEEL_ENCODER_VALUE { RepRate 50ms timeout 120ms}
     sender: IDENTITY
-    leftEncoderValue: integer (zero at initialization, never reset)
-    rightEncoderValue: integer (zero at initialization, never reset)
+    leftEncoderValue: meters (float) arc length displacement
+    rightEncoderValue: meters (float) arc length displacement
+
+RTK_LOCATION_UPDATE { RepRate 20ms timeout 50ms }
+    sender: IDENTITY
+    x: relative coordinate
+    x: relative coordinate
+    x: relative coordinate
 
